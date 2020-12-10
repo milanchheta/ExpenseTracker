@@ -1,0 +1,4 @@
+Flask
+PyJWT
+uuid
+Flask-Cors
