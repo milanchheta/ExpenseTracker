@@ -1,4 +1,0 @@
-Flask
-uuid
-Werkzeug
-PyJWT
