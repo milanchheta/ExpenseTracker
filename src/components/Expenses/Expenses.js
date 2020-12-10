@@ -17,7 +17,7 @@ function Expenses(props) {
     } else {
       axios
         .get(
-          "https://expenses-l3dp2wfioq-uk.a.run.app/expenses?expense_sheet_id=" +
+          "https://expenses-l3dp2wfioq-ue.a.run.app/expenses?expense_sheet_id=" +
             props.location.state.id
         )
         .then(
@@ -64,7 +64,7 @@ function Expenses(props) {
 
     var config = {
       method: "post",
-      url: "https://expenses-l3dp2wfioq-uk.a.run.app/expenses",
+      url: "https://expenses-l3dp2wfioq-ue.a.run.app/expenses",
       headers: {
         "Content-Type": "application/json",
       },

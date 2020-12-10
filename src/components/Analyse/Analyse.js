@@ -12,7 +12,7 @@ function Analyse(props) {
     } else {
       axios
         .get(
-          "https://analyse-l3dp2wfioq-uk.a.run.app/analyse?expense_sheet_id=" +
+          "https://analyse-l3dp2wfioq-ue.a.run.app/analyse?expense_sheet_id=" +
             props.location.state.expense_sheet_id +
             "&budget=" +
             props.location.state.budget

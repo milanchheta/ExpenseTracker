@@ -20,7 +20,7 @@ function Login(props) {
   const onSubmit = async (e) => {
     e.preventDefault();
     let res = await axios.get(
-      "https://users-l3dp2wfioq-uk.a.run.app/user?email=" +
+      "https://users-l3dp2wfioq-ue.a.run.app/user?email=" +
         email +
         "&password=" +
         password

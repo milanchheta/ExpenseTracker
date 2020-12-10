@@ -21,7 +21,7 @@ function Register(props) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    let res = await axios.post("https://users-l3dp2wfioq-uk.a.run.app/user", {
+    let res = await axios.post("https://users-l3dp2wfioq-ue.a.run.app/user", {
       email: email,
       password: password,
       full_name: name,

@@ -14,7 +14,7 @@ function Sheets(props) {
       props.history.push("/");
     } else {
       axios
-        .get("https://sheets-l3dp2wfioq-uk.a.run.app/sheets?token=" + token)
+        .get("https://sheets-l3dp2wfioq-ue.a.run.app/sheets?token=" + token)
         .then(
           (response) => {
             let sheetArr = response.data;
@@ -56,7 +56,7 @@ function Sheets(props) {
 
     var config = {
       method: "post",
-      url: "https://sheets-l3dp2wfioq-uk.a.run.app/sheets",
+      url: "https://sheets-l3dp2wfioq-ue.a.run.app/sheets",
       headers: {
         "Content-Type": "application/json",
       },
