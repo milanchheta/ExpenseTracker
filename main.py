@@ -17,6 +17,7 @@ def hello_world():
 @app.route('/user',methods = ['POST', 'GET','OPTIONS'])
 def user_endpoint():
     if request.method == 'OPTIONS':
+
         headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
