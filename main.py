@@ -22,24 +22,24 @@ db = firestore.Client()
 @cross_origin()
 def sheet_endpoint(): 
     #Fetch expense sheets for a user 
-    if request.method=='GET':
-        try:
-            args=request.args
+    if request.method == 'GET':
+        # try:
+            args = request.args
             if args:
                 user = jwt.decode(args['token'], "decode")["user"]
-                docs=db.collection(u'cloud_expense_sheets').where(u'user_id', u'==', user['user_id']).stream()
-                sheets=[]
+                docs = db.collection(u'cloud_expense_sheets').where(u'user_id', u'==', user['user_id']).stream()
+                sheets = []
                 for sheet in docs:
                     sheets.append(sheet.to_dict())
                 return (json.dumps(sheets), 200) 
             else:
                 return ('Bad request', 400)
-        except:
-            return ('Internal server error', 503)
+        # except:
+        #     return ('Internal server error', 503)
 
     #Create a new expense sheet for a user
     if request.method == 'POST':
-        try:
+        # try:
             data=request.get_json()
             if data:
                 user = jwt.decode(data['token'], "decode")["user"]
@@ -51,7 +51,7 @@ def sheet_endpoint():
                         u'sheet_id': sheet_id,
                         u'date_created':data['date_created']
                     })
-                responseObj={
+                responseObj = {
                         'sheet_name': data["sheet_name"],
                         'user_id': user['user_id'],
                         'sheet_budget': data["sheet_budget"],
@@ -61,9 +61,9 @@ def sheet_endpoint():
                 return (json.dumps(responseObj), 201) 
             else:
                 return ('Bad request', 400)
-        except: 
-            return ('Internal server error', 503)
+        # except: 
+        #     return ('Internal server error', 503)
 
 if __name__ == "__main__":
     #Run the flask server on port 8080
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug = True, host = '0.0.0.0', port = 8080)
