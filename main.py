@@ -42,14 +42,18 @@ def analyse_endpoint():
 
                 b_chart = pygal.Bar()
                 b_chart.title = "Overall expenses"
-                b_chart.add("Budget", int(budget))
+                b_chart.add("Budget", float(budget))
                 b_chart.add("Spent", spent)
+                if spent > budget:
+                    b_chart.add("Overspent", spent-float(budget))
                 barGraph = b_chart.render_data_uri()
 
                 pie_chart = pygal.Pie()
                 pie_chart.title = 'Category wise expenses'
                 for k,v in d.items():
                     pie_chart.add(k,v)
+                if spent < budget:
+                    pie_chart.add("Remaining budget", float(budget)-spent)
                 pieChart = pie_chart.render_data_uri()
 
                 graphData = {"pieChart":pieChart,"barGraph":barGraph}
