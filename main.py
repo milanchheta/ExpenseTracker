@@ -21,7 +21,7 @@ db = firestore.Client()
 def analyse_endpoint():
     #Generate graph for an expense sheet
     if request.method == 'GET':
-        try:
+        # try:
             args=request.args
             if args:
                 budget = args['budget']
@@ -56,8 +56,8 @@ def analyse_endpoint():
                 return (json.dumps(graphData), 200)
             else:
                 return ('Bad request', 400)
-        except:
-            return ('Internal server error', 503)
+        # except:
+        #     return ('Internal server error', 503)
 
 
 if __name__ == "__main__":
