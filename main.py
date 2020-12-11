@@ -24,7 +24,7 @@ decode_key="decode"
 def sheet_endpoint(): 
     #Fetch expense sheets for a user 
     if request.method == 'GET':
-        try:
+        # try:
             args = request.args
             if args:
                 user = jwt.decode(args['token'], decode_key)["user"]
@@ -35,12 +35,12 @@ def sheet_endpoint():
                 return (json.dumps(sheets), 200) 
             else:
                 return ('Bad request', 400)
-        except Exception as e:
-            return (e, 503)
+        # except:
+        #     return ('Internal server error', 503)
 
     #Create a new expense sheet for a user
     if request.method == 'POST':
-        try:
+        # try:
             data=request.get_json()
             if data:
                 user = jwt.decode(data['token'], decode_key)["user"]
@@ -62,8 +62,8 @@ def sheet_endpoint():
                 return (json.dumps(responseObj), 201) 
             else:
                 return ('Bad request', 400)
-        except Exception as e: 
-            return (e, 503)
+        # except: 
+        #     return ('Internal server error', 503)
 
 if __name__ == "__main__":
     #Run the flask server on port 8080
