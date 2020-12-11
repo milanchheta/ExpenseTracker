@@ -35,8 +35,8 @@ def sheet_endpoint():
                 return (json.dumps(sheets), 200) 
             else:
                 return ('Bad request', 400)
-        except:
-            return ('Internal server error', 503)
+        except Exception as e:
+            return (e, 503)
 
     #Create a new expense sheet for a user
     if request.method == 'POST':
@@ -62,8 +62,8 @@ def sheet_endpoint():
                 return (json.dumps(responseObj), 201) 
             else:
                 return ('Bad request', 400)
-        except: 
-            return ('Internal server error', 503)
+        except Exception as e: 
+            return (e, 503)
 
 if __name__ == "__main__":
     #Run the flask server on port 8080
