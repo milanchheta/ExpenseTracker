@@ -16,7 +16,6 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 CORS(app)
 db = firestore.Client()
-decode_key="decode"
 
 # /sheets endpoint to handle GET and POST requests
 @app.route('/sheets',methods = ['POST', 'GET'])
@@ -24,10 +23,10 @@ decode_key="decode"
 def sheet_endpoint(): 
     #Fetch expense sheets for a user 
     if request.method == 'GET':
-        # try:
+        try:
             args = request.args
             if args:
-                user = jwt.decode(args['token'], decode_key)["user"]
+                user = jwt.decode(args['token'], "decode")["user"]
                 docs = db.collection(u'cloud_expense_sheets').where(u'user_id', u'==', user['user_id']).stream()
                 sheets = []
                 for sheet in docs:
@@ -35,15 +34,15 @@ def sheet_endpoint():
                 return (json.dumps(sheets), 200) 
             else:
                 return ('Bad request', 400)
-        # except:
-        #     return ('Internal server error', 503)
+        except:
+            return ('Internal server error', 503)
 
     #Create a new expense sheet for a user
     if request.method == 'POST':
-        # try:
+        try:
             data=request.get_json()
             if data:
-                user = jwt.decode(data['token'], decode_key)["user"]
+                user = jwt.decode(data['token'], "decode")["user"]
                 sheet_id = str(uuid.uuid4())
                 sheet = db.collection(u'cloud_expense_sheets').add({
                         u'sheet_name': data["sheet_name"],
@@ -62,8 +61,8 @@ def sheet_endpoint():
                 return (json.dumps(responseObj), 201) 
             else:
                 return ('Bad request', 400)
-        # except: 
-        #     return ('Internal server error', 503)
+        except: 
+            return ('Internal server error', 503)
 
 if __name__ == "__main__":
     #Run the flask server on port 8080
