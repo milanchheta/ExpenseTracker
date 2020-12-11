@@ -21,7 +21,7 @@ db = firestore.Client()
 def analyse_endpoint():
     #Generate graph for an expense sheet
     if request.method == 'GET':
-        # try:
+        try:
             args=request.args
             if args:
                 budget = args['budget']
@@ -34,11 +34,11 @@ def analyse_endpoint():
                 spent = 0
                 d = {}
                 for expense in expenses:
-                    spent += int(expense["expense_value"])
+                    spent += float(expense["expense_value"])
                     if expense["expense_category"] in d:
-                        d[expense["expense_category"]] += int(expense["expense_value"])
+                        d[expense["expense_category"]] += float(expense["expense_value"])
                     else:
-                        d[expense["expense_category"]] = int(expense["expense_value"])
+                        d[expense["expense_category"]] = float(expense["expense_value"])
 
                 b_chart = pygal.Bar()
                 b_chart.title = "Overall expenses"
@@ -56,8 +56,8 @@ def analyse_endpoint():
                 return (json.dumps(graphData), 200)
             else:
                 return ('Bad request', 400)
-        # except:
-        #     return ('Internal server error', 503)
+        except:
+            return ('Internal server error', 503)
 
 
 if __name__ == "__main__":
