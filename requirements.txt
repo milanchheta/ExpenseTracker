@@ -2,3 +2,4 @@ Flask
 uuid
 Werkzeug
 PyJWT
+Flask-Cors
