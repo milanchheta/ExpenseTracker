@@ -8,6 +8,7 @@ from flask import Flask, request
 from google.cloud import firestore
 from flask_cors import CORS, cross_origin
 import pygal
+import json
 
 # Config flask app and firestore client
 app = Flask(__name__)
@@ -21,7 +22,6 @@ def analyse_endpoint():
     #Generate graph for an expense sheet
     if request.method == 'GET':
         try:
-
             args=request.args
             if args:
                 budget = args['budget']
