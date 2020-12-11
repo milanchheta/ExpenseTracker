@@ -44,7 +44,7 @@ def analyse_endpoint():
                 b_chart.title = "Overall expenses"
                 b_chart.add("Budget", float(budget))
                 b_chart.add("Spent", spent)
-                if spent > budget:
+                if spent > float(budget):
                     b_chart.add("Overspent", spent-float(budget))
                 barGraph = b_chart.render_data_uri()
 
@@ -52,7 +52,7 @@ def analyse_endpoint():
                 pie_chart.title = 'Category wise expenses'
                 for k,v in d.items():
                     pie_chart.add(k,v)
-                if spent < budget:
+                if spent < float(budget):
                     pie_chart.add("Remaining budget", float(budget)-spent)
                 pieChart = pie_chart.render_data_uri()
 
