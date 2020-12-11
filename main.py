@@ -1,5 +1,5 @@
 '''
-Microservice to handles creation and fetching 
+Microservice to handle creation and fetching 
 of expense sheets and its information
 from firestore
 '''
@@ -61,7 +61,7 @@ def sheet_endpoint():
                 return (json.dumps(responseObj), 201) 
             else:
                 return ('Bad request', 400)
-        except 
+        except: 
             return ('Internal server error', 503)
 
 if __name__ == "__main__":
