@@ -39,7 +39,7 @@ def user_endpoint():
                     }, "decode") 
                     return (json.dumps({'token' : token.decode('UTF-8')}), 200) 
                 else:
-                    return ('Wrong Password', 403) 
+                    return ('Wrong Password', 401) 
             else:
                 return ('Bad request', 400)
         except:
