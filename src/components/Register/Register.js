@@ -100,7 +100,7 @@ function Register(props) {
                       placeholder="Enter email"
                       value={email}
                       onChange={(e) =>
-                        e.target.value.trim() == email
+                        e.target.value.trim() === email
                           ? null
                           : setEmail(e.target.value)
                       }
@@ -115,7 +115,7 @@ function Register(props) {
                       placeholder="Password"
                       value={password}
                       onChange={(e) =>
-                        e.target.value.trim() == password
+                        e.target.value.trim() === password
                           ? null
                           : setPassword(e.target.value)
                       }
@@ -129,7 +129,7 @@ function Register(props) {
                       placeholder="Confirm password"
                       value={cpassword}
                       onChange={(e) =>
-                        e.target.value.trim() == cpassword
+                        e.target.value.trim() === cpassword
                           ? null
                           : setCpassword(e.target.value)
                       }

@@ -50,7 +50,7 @@ function Login(props) {
           },
           (error) => {
             setLoading(false);
-            if (error.response.status == 401) {
+            if (error.response.status === 401) {
               setError("Incorrect credentials / User does not exist");
             } else {
               setError("Error Logging in");
@@ -102,7 +102,6 @@ function Login(props) {
                   </div>
                   {error !== "" && (
                     <div>
-                      {console.log(error)}
                       <small className="text-danger">{error}</small>
                     </div>
                   )}

@@ -7,6 +7,7 @@ function Sheets(props) {
   const [name, setName] = useState("");
   const [budget, setBudget] = useState();
   const [sheets, setSheets] = useState([]);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,33 +49,38 @@ function Sheets(props) {
   };
 
   const addSheet = (e) => {
+    if (name === "" || budget === "") {
+      setError("Please fill out all the fields");
+    }
     let token = Cookie.get("token") ? Cookie.get("token") : null;
-
     var data = {
       date_created: getCurrentDate(),
       sheet_budget: budget,
       sheet_name: name,
       token: token,
     };
+    if (name !== "" && budget !== "") {
+      setError("");
+      var config = {
+        method: "post",
+        url: "https://sheets-l3dp2wfioq-ue.a.run.app/sheets",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
 
-    var config = {
-      method: "post",
-      url: "https://sheets-l3dp2wfioq-ue.a.run.app/sheets",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        setName("");
-        setBudget(0);
-        setSheets([response.data, ...sheets]);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      axios(config)
+        .then(function (response) {
+          setName("");
+          setBudget(0);
+          setSheets([response.data, ...sheets]);
+        })
+        .catch(function (error) {
+          setError("Error creating new sheet");
+          console.log(error);
+        });
+    }
   };
 
   const logOut = (e) => {
@@ -119,6 +125,11 @@ function Sheets(props) {
             </div>
           </div>
         </div>
+        {error !== "" && (
+          <center>
+            <small className="text-danger">{error}</small>
+          </center>
+        )}
         <div className="row mt-1">
           <div className="col my-auto">
             <center>
@@ -151,7 +162,7 @@ function Sheets(props) {
               </button>
             </center>
           </div>
-        </div>{" "}
+        </div>
         <hr />
         <div className="row">
           {loading ? (

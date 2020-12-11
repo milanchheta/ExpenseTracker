@@ -61,13 +61,13 @@ function Analyse(props) {
                 type="image/svg+xml"
                 src={barGraph}
                 className="m-1"
-                style={{ "max-width": "750px" }}
+                style={{ maxWidth: "750px" }}
               />
               <embed
                 type="image/svg+xml"
                 src={pieChart}
                 className="m-1"
-                style={{ "max-width": "750px" }}
+                style={{ maxWidth: "750px" }}
               />
             </div>
           </div>

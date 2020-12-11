@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import ReactLoading from "react-loading";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function Expenses(props) {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Other");
   const [value, setValue] = useState("");
   const [expenses, setExpenses] = useState([]);
   const [budget, setBudget] = useState(props.location.state.budget);
   const [spent, setSpent] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [error, setError] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
     if (token == null) {
@@ -47,8 +50,7 @@ function Expenses(props) {
         );
     }
   }, []);
-  const getCurrentDate = (separator = "/") => {
-    let newDate = new Date();
+  const getCurrentDate = (newDate = new Date(), separator = "/") => {
     let date = newDate.getDate();
     let month = newDate.getMonth() + 1;
     let year = newDate.getFullYear();
@@ -59,32 +61,39 @@ function Expenses(props) {
   };
 
   const addExpense = (e) => {
-    var data = {
-      expense_name: name,
-      expense_value: value,
-      date_created: getCurrentDate(),
-      expense_category: category,
-      expense_sheet_id: props.location.state.id,
-    };
+    if (category === "" || name === "" || value === "") {
+      setError("Please fill out all the fields");
+    }
+    if (category !== "" && name !== "" && value !== "") {
+      setError("");
+      var data = {
+        expense_name: name,
+        expense_value: value,
+        date_created: getCurrentDate(startDate),
+        expense_category: category,
+        expense_sheet_id: props.location.state.id,
+      };
 
-    var config = {
-      method: "post",
-      url: "https://expenses-l3dp2wfioq-ue.a.run.app/expenses",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+      var config = {
+        method: "post",
+        url: "https://expenses-l3dp2wfioq-ue.a.run.app/expenses",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
 
-    axios(config)
-      .then(function (response) {
-        console.log(response.data);
-        setExpenses([data, ...expenses]);
-        setSpent(spent + parseInt(value));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      axios(config)
+        .then(function (response) {
+          console.log(response.data);
+          setExpenses([data, ...expenses]);
+          setSpent(spent + parseInt(value));
+        })
+        .catch(function (error) {
+          setError("Error adding expense");
+          console.log(error);
+        });
+    }
   };
 
   const analyse = (e) => {
@@ -128,7 +137,7 @@ function Expenses(props) {
                 id="inputGroupSelect01"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option defaultValue>Choose category...</option>
+                <option value="Other">Choose category...</option>
                 <option value="Housing">Housing</option>
                 <option value="Transportation">Transportation</option>
                 <option value="Food">Food</option>
@@ -161,6 +170,27 @@ function Expenses(props) {
           </div>
         </div>
         <div className="row">
+          <div className="col">
+            <center>
+              <label>Date of expense: </label>
+
+              <div className="form-group p-2 bg-light mx-auto  rounded rounded-pill shadow-sm  border border-info mx-auto">
+                <DatePicker
+                  selected={startDate}
+                  className="border-0 bg-light text-center"
+                  onChange={(date) => setStartDate(date)}
+                  maxDate={new Date()}
+                />
+              </div>
+            </center>
+          </div>
+        </div>
+        {error !== "" && (
+          <center>
+            <small className="text-danger">{error}</small>
+          </center>
+        )}
+        <div className="row">
           <div className="col my-2">
             <center>
               <button
@@ -178,7 +208,7 @@ function Expenses(props) {
           </div>
         </div>
         <div className="row">
-          {expenses.length != 0 && (
+          {expenses.length !== 0 && (
             <div className="col my-2">
               <center>
                 <button
@@ -191,7 +221,7 @@ function Expenses(props) {
                     analyse(e);
                   }}
                 >
-                  <i class="fas fa-chart-bar mx-1"></i> Analyse expenses
+                  <i className="fas fa-chart-bar mx-1"></i> Analyse expenses
                 </button>
               </center>
             </div>
@@ -211,11 +241,13 @@ function Expenses(props) {
             </div>
           ) : (
             <div className="col">
-              <h3 class="mb-1 text-success text-center">Budget: {budget}$</h3>
+              <h3 className="mb-1 text-success text-center">
+                Budget: {budget}$
+              </h3>
 
               {expenses.length !== 0 ? (
-                <div class="mx-auto">
-                  <h3 class="mb-1 text-danger text-center">
+                <div className="mx-auto">
+                  <h3 className="mb-1 text-danger text-center">
                     Spent: {spent}$
                     {spent > budget ? ` / Overspent: ${spent - budget}$` : null}
                   </h3>
@@ -224,7 +256,10 @@ function Expenses(props) {
                     <div className="row">
                       {expenses.map((expense, idx) => {
                         return (
-                          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                          <div
+                            key={idx}
+                            className="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+                          >
                             <ExpenseList expense={expense} idx={idx} />
                           </div>
                         );
@@ -245,10 +280,10 @@ function Expenses(props) {
 
 function ExpenseList(props) {
   return (
-    <div class="card shadow p-0 my-1">
-      <div class="card-body">
+    <div className="card shadow p-0 my-1">
+      <div className="card-body">
         <center>
-          <span class="card-title">{props.expense.expense_name}</span>
+          <span className="card-title">{props.expense.expense_name}</span>
           <br />
           <span>Type: {props.expense.expense_category}</span>
           <br />
