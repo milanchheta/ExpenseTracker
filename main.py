@@ -51,7 +51,8 @@ def analyse_endpoint():
                 pie_chart = pygal.Pie()
                 pie_chart.title = 'Category wise expenses'
                 for k,v in d.items():
-                    pie_chart.add(k,v)
+                    if v>=0:
+                        pie_chart.add(k,v)
                 if spent < float(budget):
                     pie_chart.add("Remaining budget", float(budget)-spent)
                 pieChart = pie_chart.render_data_uri()
