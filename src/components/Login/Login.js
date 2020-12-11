@@ -38,10 +38,11 @@ function Login(props) {
     <div className="Login h-100">
       <div className="container h-100">
         <div className="row h-100">
-          <div className="col m-auto">
+          <div className="col m-auto card shadow">
             <center>
-              <h2 className="text-info">Login</h2>
-              <form className="mx-auto">
+              <p className="display-4 text-info">Expense Tracker App</p>
+              <h2 className="text-dark">Login</h2>
+              <form className="mx-auto ">
                 <div className="form-group m-2">
                   <input
                     type="email"

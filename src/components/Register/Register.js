@@ -36,9 +36,11 @@ function Register(props) {
     <div className="Register h-100">
       <div className="container h-100">
         <div className="row h-100">
-          <div className="col m-auto">
+          <div className="col m-auto card shadow">
             <center>
-              <h2 className="text-info">Register</h2>
+              <p className="display-4 text-info">Expense Tracker App</p>
+
+              <h2 className="text-dark">Register</h2>
               <form className="m-auto">
                 <div className="form-group m-2">
                   <input
