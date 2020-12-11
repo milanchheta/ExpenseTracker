@@ -1,10 +1,9 @@
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Expenses from "./components/Expenses/Expenses";
 import Sheets from "./components/Sheets/Sheets";
 import Analyse from "./components/Analyse/Analyse";
-
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 function App() {
   return (
@@ -21,5 +20,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

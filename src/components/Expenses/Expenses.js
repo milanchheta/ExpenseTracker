@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
-import Analyse from "../Analyse/Analyse";
+import ReactLoading from "react-loading";
+
 function Expenses(props) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -9,12 +10,15 @@ function Expenses(props) {
   const [expenses, setExpenses] = useState([]);
   const [budget, setBudget] = useState(props.location.state.budget);
   const [spent, setSpent] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
     if (token == null) {
       props.history.push("/");
     } else {
+      setLoading(true);
+
       axios
         .get(
           "https://expenses-l3dp2wfioq-ue.a.run.app/expenses?expense_sheet_id=" +
@@ -22,7 +26,6 @@ function Expenses(props) {
         )
         .then(
           (response) => {
-            console.log(response.data);
             let expenseArr = response.data;
             expenseArr.sort(function (a, b) {
               var c = new Date(a.date_created);
@@ -35,9 +38,11 @@ function Expenses(props) {
             }
             setSpent(s);
             setExpenses(expenseArr);
+            setLoading(false);
           },
           (error) => {
             console.log(error);
+            setLoading(false);
           }
         );
     }
@@ -95,7 +100,9 @@ function Expenses(props) {
 
   return (
     <div className="Expenses">
-      <h2 className="text-center text-info">{props.location.state.name}</h2>
+      <h2 className="text-center text-info mt-3">
+        Expenses for {props.location.state.name}
+      </h2>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -112,6 +119,8 @@ function Expenses(props) {
               />
             </div>
           </div>
+        </div>
+        <div className="row">
           <div className="col">
             <div className="form-group m-2 p-2 bg-light  rounded rounded-pill shadow-sm m-2 border border-info mx-auto">
               <select
@@ -134,6 +143,8 @@ function Expenses(props) {
               </select>
             </div>
           </div>
+        </div>
+        <div className="row">
           <div className="col">
             <div className="form-group m-2 p-2 bg-light  rounded rounded-pill shadow-sm m-2 border border-info mx-auto">
               <input
@@ -148,7 +159,9 @@ function Expenses(props) {
               />
             </div>
           </div>
-          <div className="col my-auto">
+        </div>
+        <div className="row">
+          <div className="col my-2">
             <center>
               <button
                 id="button-addon1"
@@ -163,8 +176,10 @@ function Expenses(props) {
               </button>
             </center>
           </div>
+        </div>
+        <div className="row">
           {expenses.length != 0 && (
-            <div className="col my-auto">
+            <div className="col my-2">
               <center>
                 <button
                   id="button-addon1"
@@ -181,42 +196,47 @@ function Expenses(props) {
               </center>
             </div>
           )}
-        </div>{" "}
+        </div>
+        <hr />
         <div className="row">
-          <div className="col">
-            <h3 class="mb-1 text-success text-center">Budget: {budget}</h3>
+          {loading ? (
+            <div className="col">
+              <ReactLoading
+                type="spin"
+                className="m-auto"
+                color="#00aaff"
+                height={100}
+                width={100}
+              />
+            </div>
+          ) : (
+            <div className="col">
+              <h3 class="mb-1 text-success text-center">Budget: {budget}$</h3>
 
-            {expenses.length !== 0 ? (
-              <div class="mx-auto">
-                <h3 class="mb-1 text-danger text-center">Spent: {spent}</h3>
-                <h2 class="mb-1 text-info text-center">Expenses</h2>
-                {/* <ExpenseList expenses={expenses} /> */}
-                <div className="container">
-                  <div className="row">
-                    <div className="col">
-                      <table className=" mx-auto">
-                        <thead>
-                          <tr>
-                            <th>Type</th>
-                            <th>Name</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {expenses.map((expense, idx) => {
-                            return <ExpenseList expense={expense} idx={idx} />;
-                          })}
-                        </tbody>
-                      </table>
+              {expenses.length !== 0 ? (
+                <div class="mx-auto">
+                  <h3 class="mb-1 text-danger text-center">
+                    Spent: {spent}$
+                    {spent > budget ? ` / Overspent: ${spent - budget}$` : null}
+                  </h3>
+                  <hr />
+                  <div className="container">
+                    <div className="row">
+                      {expenses.map((expense, idx) => {
+                        return (
+                          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <ExpenseList expense={expense} idx={idx} />
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center mt-5 text-primary">No Expenses</div>
-            )}
-          </div>
+              ) : (
+                <div className="text-center mt-5 text-primary">No Expenses</div>
+              )}
+            </div>
+          )}
         </div>
       </div>{" "}
     </div>
@@ -225,20 +245,30 @@ function Expenses(props) {
 
 function ExpenseList(props) {
   return (
-    <tr key={props.idx}>
-      <td>{props.expense.expense_category}</td>
-      <td>{props.expense.expense_name}</td>
-      <td>{props.expense.date_created}</td>
-      <td
-        className={
-          props.expense.expense_value > 0
-            ? "text-white bg-danger border border-light"
-            : "text-white bg-success border border-light"
-        }
-      >
-        {props.expense.expense_value}
-      </td>
-    </tr>
+    <div class="card shadow p-0 my-1">
+      <div class="card-body">
+        <center>
+          <span class="card-title">{props.expense.expense_name}</span>
+          <br />
+          <span>Type: {props.expense.expense_category}</span>
+          <br />
+          <span
+            className={
+              props.expense.expense_value > 0
+                ? "text-danger  expenseValue "
+                : "text-success expenseValue"
+            }
+          >
+            {props.expense.expense_value}$
+          </span>
+          <br />
+          <small className="text-muted">
+            Date of Expense: {props.expense.date_created}
+          </small>
+          <br />
+        </center>
+      </div>
+    </div>
   );
 }
 export default Expenses;

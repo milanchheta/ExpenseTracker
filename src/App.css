@@ -11,9 +11,16 @@ form input {
 .Sheets .rounded {
   max-width: 350px;
 }
-
-.list-group {
-  max-width: 450px;
+.Expenses .rounded {
+  max-width: 350px;
+}
+.expenseValue {
+  font-weight: 700;
+  font-size: 25px;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 25px;
 }
 table {
   color: #333;

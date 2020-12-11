@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
-import Expenses from "../Expenses/Expenses";
+import ReactLoading from "react-loading";
+
 function Sheets(props) {
   const [name, setName] = useState("");
-  const [budget, setBudget] = useState(null);
+  const [budget, setBudget] = useState();
   const [sheets, setSheets] = useState([]);
-  const [sheet_id, setSheet_id] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
     if (token == null) {
       props.history.push("/");
     } else {
+      setLoading(true);
       axios
         .get("https://sheets-l3dp2wfioq-ue.a.run.app/sheets?token=" + token)
         .then(
@@ -24,10 +26,11 @@ function Sheets(props) {
               return d - c;
             });
             setSheets(sheetArr);
-            console.log(sheets);
+            setLoading(false);
           },
           (error) => {
             console.log(error);
+            setLoading(false);
           }
         );
     }
@@ -80,6 +83,8 @@ function Sheets(props) {
   };
   return (
     <div className="Sheets h-100">
+      <h2 className="text-info text-center mb-3 mt-3">Expense sheets</h2>
+
       <div className="container">
         <div className="row">
           <div className="col">
@@ -97,6 +102,8 @@ function Sheets(props) {
               />
             </div>
           </div>
+        </div>{" "}
+        <div className="row">
           <div className="col">
             <div className="form-group m-2 p-2 bg-light  rounded rounded-pill shadow-sm m-2 border border-info mx-auto">
               <input
@@ -111,6 +118,8 @@ function Sheets(props) {
               />
             </div>
           </div>
+        </div>
+        <div className="row mt-1">
           <div className="col my-auto">
             <center>
               <button
@@ -125,7 +134,9 @@ function Sheets(props) {
                 Add expense sheet
               </button>
             </center>
-          </div>{" "}
+          </div>
+        </div>{" "}
+        <div className="row mt-2">
           <div className="col my-auto">
             <center>
               <button
@@ -141,30 +152,42 @@ function Sheets(props) {
             </center>
           </div>
         </div>{" "}
+        <hr />
         <div className="row">
-          <div className="col">
-            {sheets.length !== 0 ? (
-              <div class="list-group mt-5  mx-auto">
-                <h2 class="mb-1 text-info text-center">Expense sheets</h2>
-
-                {sheets.map((sheet, idx) => {
-                  return (
-                    <div key={idx}>
-                      <SheetsList
-                        sheet={sheet}
-                        setSheet_id={setSheet_id}
-                        {...props}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center mt-5 text-primary">
-                No Expense Sheet available
-              </div>
-            )}
-          </div>
+          {loading ? (
+            <div className="col">
+              <ReactLoading
+                type="spin"
+                className="m-auto"
+                color="#00aaff"
+                height={100}
+                width={100}
+              />
+            </div>
+          ) : (
+            <div className="col">
+              {sheets.length !== 0 ? (
+                <div className="container">
+                  <div className="row">
+                    {sheets.map((sheet, idx) => {
+                      return (
+                        <div
+                          key={idx}
+                          className="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+                        >
+                          <SheetsList sheet={sheet} {...props} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center mt-5 text-primary">
+                  No Expense Sheet available
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -181,20 +204,26 @@ function SheetsList(props) {
       },
     });
   };
-
   return (
-    <div className="list-group-item flex-column align-items-center d-flex w-100">
-      <h5 className="mb-1">{props.sheet.sheet_name}</h5>
-      <small className="text-muted">{props.sheet.date_created}</small>
-      <button
-        className="btn text-info"
-        onClick={(e) => {
-          itemClick(props.sheet.sheet_id);
-        }}
-      >
-        {" "}
-        <i class="fas fa-arrow-circle-right fa-2x"></i>
-      </button>
+    <div className="card shadow p-0 my-1">
+      <div className="card-body">
+        <center>
+          <span className="card-title">{props.sheet.sheet_name}</span>
+          <br />
+          <small className="text-muted">
+            Date Created: {props.sheet.date_created}
+          </small>
+          <br />
+          <button
+            className="btn btn-info my-auto"
+            onClick={(e) => {
+              itemClick(props.sheet.sheet_id);
+            }}
+          >
+            Go to sheet <i className="fas fa-arrow-circle-right mx-1"></i>
+          </button>
+        </center>
+      </div>
     </div>
   );
 }
