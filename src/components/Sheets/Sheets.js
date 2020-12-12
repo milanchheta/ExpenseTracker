@@ -1,8 +1,12 @@
+//file for expense sheets component
+
+//import statements
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import ReactLoading from "react-loading";
 
+//Function for sheets component
 function Sheets(props) {
   const [name, setName] = useState("");
   const [budget, setBudget] = useState();
@@ -12,9 +16,11 @@ function Sheets(props) {
 
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
+    //check if user is already logged in
     if (token == null) {
       props.history.push("/");
     } else {
+      //fetch already existing sheets
       setLoading(true);
       axios
         .get("https://sheets-l3dp2wfioq-ue.a.run.app/sheets?token=" + token)
@@ -37,6 +43,7 @@ function Sheets(props) {
     }
   }, []);
 
+  //function to get current date
   const getCurrentDate = (separator = "/") => {
     let newDate = new Date();
     let date = newDate.getDate();
@@ -48,7 +55,9 @@ function Sheets(props) {
     }${separator}${date}${separator}${year}`;
   };
 
+  //function to add new sheet
   const addSheet = (e) => {
+    //input validation
     if (name === "" || budget === "") {
       setError("Please fill out all the fields");
     }
@@ -59,6 +68,7 @@ function Sheets(props) {
       sheet_name: name,
       token: token,
     };
+    //if all the input is valid
     if (name !== "" && budget !== "") {
       setError("");
       var config = {
@@ -82,7 +92,7 @@ function Sheets(props) {
         });
     }
   };
-
+  // function for logging out
   const logOut = (e) => {
     Cookie.remove("token");
     props.history.push("/");
@@ -204,7 +214,10 @@ function Sheets(props) {
     </div>
   );
 }
+
+//function to display all the created sheets
 function SheetsList(props) {
+  //function to handle go to sheet button
   const itemClick = (id) => {
     props.history.push({
       pathname: "/expenses",

@@ -1,3 +1,6 @@
+//file for expenses component
+
+//import statements
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
@@ -5,6 +8,7 @@ import ReactLoading from "react-loading";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+//Function for expenses component
 function Expenses(props) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Other");
@@ -15,13 +19,15 @@ function Expenses(props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
+    //check if user is already logged in
     if (token == null) {
       props.history.push("/");
     } else {
+      //get already added expenses
       setLoading(true);
-
       axios
         .get(
           "https://expenses-l3dp2wfioq-ue.a.run.app/expenses?expense_sheet_id=" +
@@ -50,20 +56,24 @@ function Expenses(props) {
         );
     }
   }, []);
+
+  //function to get current date
   const getCurrentDate = (newDate = new Date(), separator = "/") => {
     let date = newDate.getDate();
     let month = newDate.getMonth() + 1;
     let year = newDate.getFullYear();
-
     return `${
       month < 10 ? `0${month}` : `${month}`
     }${separator}${date}${separator}${year}`;
   };
 
+  //function to add new expense
   const addExpense = (e) => {
+    //input validation
     if (category === "" || name === "" || value === "") {
       setError("Please fill out all the fields");
     }
+    //if all the input is valid
     if (category !== "" && name !== "" && value !== "") {
       setError("");
       var data = {
@@ -96,6 +106,7 @@ function Expenses(props) {
     }
   };
 
+  //function to handle the analyse expenses button
   const analyse = (e) => {
     console.log("graphs");
     props.history.push({
@@ -278,6 +289,7 @@ function Expenses(props) {
   );
 }
 
+// function to display all the added expenses
 function ExpenseList(props) {
   return (
     <div className="card shadow p-0 my-1">

@@ -1,8 +1,12 @@
+//file for register component
+
+//import statements
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import ReactLoading from "react-loading";
 
+//Function for register component
 function Register(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,30 +16,36 @@ function Register(props) {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
+    //check if user is already logged in
     if (token != null) {
       props.history.push("/sheets");
     }
   }, []);
-
+  // got to login page
   const goToLogin = () => {
     props.history.push("/");
   };
 
+  //action for on register
   const onSubmit = async (e) => {
     e.preventDefault();
 
     var pattern = new RegExp(
       /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
     );
+    //input validation
     if (name === "" || email === "" || password === "") {
       setError("Please fill out all the fields");
     }
+    //input validation
     if (!pattern.test(email) && error !== "") {
       setError("Enter Valid Email Address");
     }
+    //input validation
     if (password !== cpassword && password !== "" && cpassword !== "") {
       setError("Passwords do not match");
     }
+    //if all the input is valid
     if (
       name !== "" &&
       email !== "" &&

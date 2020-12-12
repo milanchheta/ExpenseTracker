@@ -1,8 +1,12 @@
+//file for analyse component
+
+//import statements
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import ReactLoading from "react-loading";
 
+//Function for analyse component
 function Analyse(props) {
   const [barGraph, setbarGraph] = useState(null);
   const [pieChart, setpieChart] = useState(null);
@@ -10,11 +14,12 @@ function Analyse(props) {
 
   useEffect(() => {
     const token = Cookie.get("token") ? Cookie.get("token") : null;
+    //check if user is already logged in
     if (token == null) {
       props.history.push("/");
     } else {
+      //get the graphs from the analyse microservice
       setLoading(true);
-
       axios
         .get(
           "https://analyse-l3dp2wfioq-ue.a.run.app/analyse?expense_sheet_id=" +
@@ -35,6 +40,7 @@ function Analyse(props) {
         );
     }
   }, []);
+
   return (
     <div className="Analyse h-100 mx-auto">
       <h2 className="text-center text-info mb-5 mt-3">
